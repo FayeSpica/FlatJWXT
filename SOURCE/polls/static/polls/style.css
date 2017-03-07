@@ -1,0 +1,11 @@
+li a{
+	color: cyan;
+}
+a:link {color: #FF0000}     /* 未访问的链接 */
+a:visited {color: red}  /* 已访问的链接 */
+a:hover {color: #FF00FF}    /* 当有鼠标悬停在链接上 */
+a:active {color: #0000FF}   /* 被选择的链接 */
+body {
+  padding-bottom: 40px;
+  background-color: cyan
+}

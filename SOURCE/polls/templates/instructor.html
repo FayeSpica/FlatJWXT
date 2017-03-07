@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- saved from url=(0033)http://www.bootcss.com/p/flat-ui/ -->
+<html lang="en" class="dk_fouc has-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Flat JWXT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Loading Bootstrap -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="{% static 'css/flat-ui.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.6.2/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body >
+    <style>
+      body {
+        min-height: 2000px;
+        padding-top: 70px;
+      }
+    </style>
+    <!-- Static navbar -->
+    <div class="container">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">导航</span>
+          </button>
+          <a class="navbar-brand" href="/">Flat JWXT</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/instructor/">首页</a></li>
+            <li><a href="/instructor/stulist">学生名单</a></li>
+            <li><a href="">课表</a></li>
+            <li><a href="/instructor/info">信息</a></li>
+            <li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">课程 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/instructor/allcourses">所有课程</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">开课</li>
+                <li><a href="/instructor/newcourses">新课程</a></li>
+                <li class="divider"></li>
+                <li><a href="/instructor/stcourses">已开课程</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">成绩</li>
+                <li><a href="/instructor/coursegrade">录入成绩</a></li>
+              </ul>
+            </li>
+            <li><a><small id="time-display"></small></a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="" style ="font-size:4px">类别: {{ request.session.logged_role }}</a></li>
+            <li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ request.session.logged_user }} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/logout/">登出</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">信息</li>
+                <li><a href="#"></a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container" style="width: 970px !important">
+      <div class="jumbotron">
+        <h5 class="text-left text-primary">山中大学本科教务系统</h5>
+        <div class="row">
+          <div class="col-md-12">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if courses_stu_list_list %}
+    {% for courses_stu_list in courses_stu_list_list %}
+    <div class="container" style="width: 970px !important">
+      <div class="jumbotron">
+         {% if  courses_stu_list.0|length < 3 %}
+            <h5 class="text-center">{{courses_stu_list.0.title0}}</h5>
+            <p class="text-right"><small>总人数:  {{courses_stu_list|length |add:-1}}</small></p>
+         {% endif %}
+          <div class="row" id="{{courses_stu_list.1.sec_id}}">
+              <div class="col-md-12">
+              <!--学生列表-->
+              <!--{% if courses_stu_list %}-->
+              <table class="table" id="stu_lists" style="width:100%">
+                <tbody>
+                  <tr>
+                    <td>学号</td><td>姓名</td><td>成绩</td><td></td>
+                  </tr>
+                {% for stu_list in courses_stu_list %}
+                  {% if stu_list|length > 2 %}
+                    <tr id="{{stu_list.ID}}">
+                      <td>{{stu_list.ID}}</td>
+                      <td>{{stu_list.name}}</td>
+                      <td>{{stu_list.grade}}</td>
+                      <td><button class="btn btn-sm btn-danger" onclick="bt_ins_course_delete_stu_onclick(this)">退课</button></td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+                <tr id="{{courses_stu_list.0.sec_id}}">
+                  <td><input type="text" class="col-lg-2 form-control" oninput="on_id_input_change(this)" placeholder="学号"></td>
+                  <td><input type="text" class="col-lg-2 form-control" oninput="on_name_input_change(this)" placeholder="姓名"></td>
+                  <td><input type="text" class="col-lg-2 form-control" oninput="on_grade_input_change(this)" placeholder="成绩(可选)"></td>
+                  <td><button class="btn btn-sm btn-primary " onclick="bt_ins_course_add_stu_onclick(this)">新增</button></td>
+                </tr>
+                <tr>
+                  <td><small class="text-danger">.</small></td>
+                  <td><small class="text-danger">.</small></td>
+                  <td><small class="text-danger">.</small></td>
+                  <td></td>
+                </tr>
+                </tbody>
+              </table>
+             <!--{% endif %}-->
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+
+        <!--信息-->
+    {% if ins_info %}
+    <div class="container" style="width: 970px !important">
+      <div class="jumbotron">
+        <h5 style="text-align:center">教师个人信息</h5>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table" style="width:100%">
+              <tbody>
+                <tr>
+                  <td>院系</td><td>姓名</td><td>ID</td><td>薪资</td>
+                </tr>
+              {% for info in ins_info %}
+              <tr>
+               <td>{{info.dept_name}}</td>
+               <td>{{info.name}}</td>
+               <td>{{info.ID}}</td>
+               <td>{{info.salary}}</td>
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+        <!--已开课程-->
+    {% if ins_selected_courses %}
+    <div class="container" style="width: 970px !important">
+      <div class="jumbotron">
+          <div class="row">
+              <div class="col-md-12">   
+                <table class="table" style="width:100%">
+                  <tbody>
+                    <tr>
+                      <td>课程</td><td>学分</td><td>课程段ID</td><td>学年</td><td>学期</td><td>楼</td><td>课室</td><td>周数</td><td>星期</td><td>时间</td><td></td>
+                    </tr>
+                  {% for course in ins_selected_courses %}
+                      <tr id="{{course.sec_id}}_{{course.course_id}}_{{course.semester}}_{{course.year}}">
+                        <td>{{course.title}}</td>
+                        <td>{{course.credits}}</td>
+                        <td>{{course.sec_id}}</td>
+                        <td>{{course.year}}</td>
+                        <td>{{course.semester}}</td>
+                        <td>{{course.building}}</td>
+                        <td>{{course.room_number}}</td>
+                        <td>{{course.week_slot}}</td>
+                        <td>星期{{course.week}} </td>
+                        <td>{{course.time_slot}}节</td>
+                        <td><button class="btn btn-sm btn-danger" onclick="bt_ins_course_delete_onclick(this)">取消</button></td>
+                      </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+
+                            <!--所有课程-->
+              {% if all_courses %}
+    <div class="container" style="width: 970px !important">
+      <div class="jumbotron">
+          <div class="row">
+              <div class="col-md-12">   
+              <div class="col-xs-3 col-xs-offset-9">
+                <h3 class="demo-panel-title">选择院系</h3>
+                <select class="select select-danger mrs mbm" onchange="selectChange()" id="selectSId" data-toggle="select">
+                  <option value="0" selected>所有</option>
+                  {% for dept in all_courses.0 %}
+                  <option value="{{dept.dept_id}}">{{dept.dept_name}}</option>
+                  {% endfor %}
+                </select>
+              </div> <!-- /.col-xs-3 -->
+              <table class="table" id="stu_courses" style="width:100%">
+                <tbody>
+                  <tr>
+                    <td>课程</td><td>老师</td><td>学分</td><td>学年</td><td>学期</td><td>楼</td><td>课室</td><td>周数</td><td>星期</td><td>时间</td><td></td>
+                  </tr>
+                {% for course in all_courses.1 %}
+                    <tr id="{{course.sec_id}}" tag="{{course.dept_id}}">
+                      <td>{{course.title}}</td>
+                      <td>{{course.name}}</td>
+                      <td>{{course.credits}}</td>
+                      <td>{{course.year}}</td>
+                      <td>{{course.semester}}</td>
+                      <td>{{course.building}}</td>
+                      <td>{{course.room_number}}</td>
+                      <td>{{course.week_slot}}</td>
+                      <td>星期{{course.week}} </td>
+                      <td>{{course.time_slot}}节</td>
+                      <!--<td><button class="btn btn-sm btn-primary btn-embossed" onclick="bt_stu_course_select_onclick(this)">选课</button></td>-->
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+             </div>
+          </div>
+        </div>
+      </div>
+              {% endif %}
+
+
+                  <!--新课程-->
+              {% if add_new_courses %}
+    <div class="container" style="width: 1180px !important">
+      <div class="jumbotron">
+          <div class="row">
+              <div class="col-md-12">   
+              <div class="col-xs-3 col-xs-offset-9">
+                <h3 class="demo-panel-title">选择院系</h3>
+                <select class="select select-danger mrs mbm" onchange="selectChange()" id="selectSId" data-toggle="select">
+                  <option value="0" selected>所有</option>
+                  {% for dept in add_new_courses.0 %}
+                  <option value="{{dept.dept_id}}">{{dept.dept_name}}</option>
+                  {% endfor %}
+                </select>
+              </div> <!-- /.col-xs-3 -->
+              <table class="table" id="stu_courses" style="width:100%">
+                <tbody>
+                  <tr>
+                    <td>课程</td><td>课程ID</td><td>课程段ID</td><td>学分</td><td>学年</td><td>学期</td><td>楼</td><td>课室</td><td>周数</td><td>星期</td><td>时间</td><td></td>
+                  </tr>
+                {% for course in add_new_courses.1 %}
+                    <tr id="{{course.sec_id}}" tag="{{course.dept_id}}">
+                      <td>{{course.title}}</td>
+                      <td>{{course.course_id}}</td>
+                      <td>{{course.sec_id}}</td>
+                      <td>{{course.credits}}</td>
+                      <td>{{course.year}}</td>
+                      <td>{{course.semester}}</td>
+                      <td>{{course.building}}</td>
+                      <td>{{course.room_number}}</td>
+                      <td>{{course.week_slot}}</td>
+                      <td>{{course.week}} </td>
+                      <td>{{course.time_slot}}节</td>
+                      <td><button class="btn btn-sm btn-warning btn-embossed" onclick="bt_ins_course_add_onclick(this)">开课</button></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+             </div>
+          </div>
+        </div>
+      </div>
+
+ {% endif %}
+    <!--学生成绩-->
+  {% if stu_grades_list_list %}
+    {% for courses_stu_list in stu_grades_list_list %}
+    <div class="container" style="width: 970px !important">
+      <div class="jumbotron">
+         {% if  courses_stu_list.0|length < 3 %}
+            <h5 class="text-center">{{courses_stu_list.0.title0}}</h5>
+            <p class="text-right"><small>总人数:  {{courses_stu_list|length |add:-1}}</small></p>
+         {% endif %}
+          <div class="row" id="{{courses_stu_list.1.sec_id}}">
+              <div class="col-md-12">
+              <!--学生列表-->
+              <!--{% if courses_stu_list %}-->
+              <table class="table" id="stu_lists" style="width:100%">
+                <tbody id="{{courses_stu_list.1.sec_id}}_{{courses_stu_list.1.course_id}}_{{courses_stu_list.1.semester}}_{{courses_stu_list.1.year}}">
+                  <tr>
+                    <td>学号</td><td>姓名</td><td>成绩</td><td></td>
+                  </tr>
+                {% for stu_list in courses_stu_list %}
+                  {% if stu_list|length > 2 %}
+                    <tr id="{{stu_list.ID}}">
+                      <td>{{stu_list.ID}}</td>
+                      <td>{{stu_list.name}}</td>
+                      <td>{{stu_list.grade}}</td>
+                      <td><button class="btn btn-sm btn-inverse" onclick="bt_ins_course_upgrade_stu_onclick1(this)">录入</button></td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+                </tbody>
+              </table>
+             <!--{% endif %}-->
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    </div>
+
+      <!-- Load JS here for greater good =============================-->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!--<script src="{% static 'js/video.js' %}"></script>-->
+    <script src="{% static 'js/flat-ui.min.js' %}"></script>
+    <script src="{% static 'js/application.js' %}"></script>
+    <script src="{% static 'js/prettify.js' %}"></script>
+    <script src="{% static 'js/jwxt.js' %}"></script>
+  </body>
+</html>

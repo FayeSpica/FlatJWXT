@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI - Free Bootstrap Framework and Theme</title>
+    <meta name="description" content="Flat UI Kit Free is a Twitter Bootstrap Framework design and Theme, this responsive framework includes a PSD and HTML version."/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="{% static 'css/flat-ui.css' %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="dist/js/vendor/html5shiv.js"></script>
+      <script src="dist/js/vendor/respond.min.js"></script>
+      background:url({% static 'img/imac.png' %})
+    <![endif]-->
+  </head>
+	<body>
+    <style>
+      body {
+        min-height: 2000px;
+        padding-top: 70px;
+        background-color: #1abc9c;
+      }
+    </style>
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+    <div class="container">
+        <div class="login" style="background-image:url(bgimage.png)">
+        <div class="login-screen">
+          <div class="login-icon">
+            <img src="{% static 'images/login/icon.png' %}" alt="Welcome to Mail App" />
+            <h4>Welcome to <small>教务系统</small></h4>
+          </div>
+          <form id="login-form" action="/accounts/login/" accept-charset="UTF-8" method="post">
+            {% csrf_token %}
+          <div class="login-form">
+            <div class="form-group">
+              <!--<input type="text" class="form-control login-field" value="" placeholder="学号" id="userid" />-->
+              {{ form.username }}
+              <label class="login-field-icon fui-user" for="login-name"></label>
+            </div>
+
+            <div class="form-group">
+              <input type="password" class="form-control login-field" value="" placeholder="密码" id="passwd" />
+              {{ form.password }}
+              
+              <label class="login-field-icon fui-lock" for="login-pass"></label>
+            </div>
+          
+            {% if tips %}
+            <label  for="login-pass" style="color:#1abc9c" >{{ tips }}</label>
+            {% endif %}
+            <input type="submit" class="btn btn-primary btn-lg btn-block" value = "登录">
+            <input type="hidden" name="next" value="/student/" />
+            <a class="login-link" href="#">忘记密码?</a>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+{# Assumes you setup the password_reset view in your URLconf #}
+
+{% endblock %}
+
+    <!-- Load JS here for greater good =============================-->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!--<script src="{% static 'js/video.js' %}"></script>-->
+    <script src="{% static 'js/flat-ui.min.js' %}"></script>
+    <script src="{% static 'js/application.js' %}"></script>
+  </body>
+</html>
